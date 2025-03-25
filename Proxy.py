@@ -1,9 +1,9 @@
 # Include the libraries for socket and system calls
-import socket
-import sys
-import os
-import argparse
-import re
+import socket # Import socket module
+import sys # System functions (exit, arguments)
+import os # OS interaction (files, paths, commands)
+import argparse # Argument parser
+import re # Regular expressions (text parsing)
 
 # 1MB buffer size
 BUFFER_SIZE = 1000000
@@ -55,7 +55,7 @@ while True:
   # Accept connection from client and store in the clientSocket
   try:
     # ~~~~ INSERT CODE ~~~~
-    clientSocket,
+    clientSocket, client_address = server_socket.accept()
     # ~~~~ END CODE INSERT ~~~~
     print ('Received a connection')
   except:
@@ -65,6 +65,7 @@ while True:
   # Get HTTP request from client
   # and store it in the variable: message_bytes
   # ~~~~ INSERT CODE ~~~~
+  message_bytes = clientSocket.recv(BUFFER_SIZE)
   # ~~~~ END CODE INSERT ~~~~
   message = message_bytes.decode('utf-8')
   print ('Received request:')
@@ -109,7 +110,7 @@ while True:
 
     fileExists = os.path.isfile(cacheLocation)
     
-    # Check wether the file is currently in the cache
+    # Check whether the file is currently in the cache
     cacheFile = open(cacheLocation, "r")
     cacheData = cacheFile.readlines()
 
@@ -117,6 +118,10 @@ while True:
     # ProxyServer finds a cache hit
     # Send back response to client 
     # ~~~~ INSERT CODE ~~~~
+    response_headers = "HTTP/1.1 200 OK\r\n"
+    response_headers += "Content-Type: text/html\r\n"
+    response_headers += "Content-Length: " + str(len(cacheData)) + "\r\n"
+    response_headers += "Connection: close\r\n"
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
@@ -127,6 +132,7 @@ while True:
     # Create a socket to connect to origin server
     # and store in originServerSocket
     # ~~~~ INSERT CODE ~~~~
+    originServerSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # ~~~~ END CODE INSERT ~~~~
 
     print ('Connecting to:\t\t' + hostname + '\n')
@@ -135,6 +141,7 @@ while True:
       address = socket.gethostbyname(hostname)
       # Connect to the origin server
       # ~~~~ INSERT CODE ~~~~
+      originServerSocket.connect((address, 80))
       # ~~~~ END CODE INSERT ~~~~
       print ('Connected to origin Server')
 
@@ -145,6 +152,8 @@ while True:
       # originServerRequest is the first line in the request and
       # originServerRequestHeader is the second line in the request
       # ~~~~ INSERT CODE ~~~~
+      originServerRequestHeader = "Host: " + hostname + "\r\n"
+      originServerRequest = method + ' ' + resource + ' ' + version
       # ~~~~ END CODE INSERT ~~~~
 
       # Construct the request to send to the origin server
@@ -165,10 +174,12 @@ while True:
 
       # Get the response from the origin server
       # ~~~~ INSERT CODE ~~~~
+      response = originServerSocket.recv(BUFFER_SIZE)
       # ~~~~ END CODE INSERT ~~~~
 
       # Send the response to the client
       # ~~~~ INSERT CODE ~~~~
+      clientSocket.sendall(response)
       # ~~~~ END CODE INSERT ~~~~
 
       # Create a new file in the cache for the requested file.
@@ -180,6 +191,7 @@ while True:
 
       # Save origin server response in the cache file
       # ~~~~ INSERT CODE ~~~~
+      cacheFile.write(response)
       # ~~~~ END CODE INSERT ~~~~
       cacheFile.close()
       print ('cache file closed')
@@ -191,7 +203,7 @@ while True:
       clientSocket.shutdown(socket.SHUT_WR)
       print ('client socket shutdown for writing')
     except OSError as err:
-      print ('origin server request failed. ' + err.strerror)
+      print ('origin server request failed. ' + str(err))
 
   try:
     clientSocket.close()
