@@ -121,7 +121,8 @@ while True:
     response_headers = "HTTP/1.1 200 OK\r\n"
     response_headers += "Content-Type: text/html\r\n"
     response_headers += "Content-Length: " + str(len(cacheData)) + "\r\n"
-    response_headers += "Connection: close\r\n"
+    response_headers += "Connection: close\r\n\r\n"
+    clientSocket.sendall(response_headers.encode() + cacheData)
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
