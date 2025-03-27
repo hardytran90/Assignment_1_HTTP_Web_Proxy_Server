@@ -1,11 +1,11 @@
 HTTP/1.1 200 OK
 Server: nginx/1.10.3 (Ubuntu)
-Date: Wed, 26 Mar 2025 23:43:52 GMT
+Date: Thu, 27 Mar 2025 00:15:22 GMT
 Content-Type: text/html
-Content-Length: 483
+Content-Length: 713
 Last-Modified: Tue, 25 Mar 2025 21:00:42 GMT
 Connection: keep-alive
-ETag: "67e3197a-1e3"
+ETag: "67e3197a-2c9"
 Cache-Control: no-store
 Accept-Ranges: bytes
 
@@ -16,15 +16,27 @@ Accept-Ranges: bytes
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" href="/icons/favicon-red.ico"/>
   <link rel="apple-touch-icon" href="/icons/icon-red.png"/>
-  <title>http.badssl.com</title>
+  <title>textarea.badssl.com</title>
   <link rel="stylesheet" href="/style.css">
   <style>body { background: red; }</style>
 </head>
 <body>
+<style>
+#content textarea {
+  font-size: 4vw;
+}
+</style>
+
 <div id="content">
-  <h1 style="font-size: 8vw;">
-    http.badssl.com
+  <h1 style="font-size: 5vw;">
+    textarea.<br>badssl.com
   </h1>
+  <br><br><br>
+  <textarea placeholder="Type here." autofocus></textarea>
+</div>
+
+<div id="footer">
+  This page contains a <code>&lt;textarea&gt;</code> input.
 </div>
 
 </body>
